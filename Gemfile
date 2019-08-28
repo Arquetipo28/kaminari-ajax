@@ -6,6 +6,8 @@ ruby '2.6.3'
 gem 'bootsnap', require: false
 gem 'coffee-rails'
 gem 'jbuilder'
+gem 'jquery-rails'
+gem 'kaminari'
 gem 'pg'
 gem 'puma'
 gem 'rails'
