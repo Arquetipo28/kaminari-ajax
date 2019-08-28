@@ -33,7 +33,7 @@ async function fetchVisits(page) {
           for (let i = currentPage; i <= response.total_pages; i++) {
             totalPages.push(i);
           }
-          firstPage = 1;
+          firstPage = 0;
           lastPage = totalPages.length < 5 ? totalPages.length : 5 ;
         } else {
           
@@ -46,18 +46,27 @@ async function fetchVisits(page) {
 
 
 async function addPageButtons(response) {
-  prevPage = (currentPage - 1) <= 0 ? 1 : currentPage - 1
-  nextPage = (currentPage + 1) > totalPages.length ? totalPages.length - 1 : currentPage + 1;
-  
-  pagesToShow = totalPages.slice(firstPage, lastPage)
-  $('#pages').empty();
-  $('#records').empty();
-  $('#pages').append(`<button data-page='${prevPage}' onClick='fetchVisits(this.dataset.page)'>Previous</button>`)
-  for (const i of totalPages) {
-    $('#pages').append(`<button data-page='${i}' onClick='fetchVisits(this.dataset.page)'>${i}</button>`)
+  if (totalPages.includes(currentPage)) {
+    prevPage = (currentPage - 1) <= 0 ? 1 : currentPage - 1
+    nextPage = (currentPage) > totalPages.length ? totalPages.length - 1 : currentPage + 1;
+    if (currentPage > lastPage) {
+      firstPage = currentPage - 1;
+      lastPage = firstPage + 5;
+    } else if (currentPage <= firstPage) {
+      firstPage = currentPage - 5;
+      lastPage = firstPage + 5;
+      console.log(firstPage, lastPage)
+    }
+    pagesToShow = totalPages.slice(firstPage, lastPage)
+    $('#pages').empty();
+    $('#records').empty();
+    $('#pages').append(`<button data-page='${prevPage}' onClick='fetchVisits(this.dataset.page)'>Previous</button>`)
+    for (const i of pagesToShow) {
+      $('#pages').append(`<button data-page='${i}' onClick='fetchVisits(this.dataset.page)'>${i}</button>`)
+    }
+    $('#pages').append(`<button data-page='${nextPage}' onClick='fetchVisits(this.dataset.page)'>Next</button>`)
+    showRecords()
   }
-  $('#pages').append(`<button data-page='${nextPage}' onClick='fetchVisits(this.dataset.page)'>Next</button>`)
-  showRecords()
 }
 
 function showRecords() {
