@@ -1,0 +1,68 @@
+asdas
+<div id="records"></div>
+<div id="pages">
+
+</div>
+
+<script>
+var records = undefined;
+var totalPages = undefined;
+var currentPage = 1;
+var currentTotalPages = undefined;
+var prevPage = undefined;
+var nextPage = undefined;
+var firstPage = undefined;
+var lastPage = undefined;
+$(document).ready(() => {
+    fetchVisits(1);
+})
+
+async function fetchVisits(page) {
+  currentPage = page * 1
+  if (page >= 1) {
+    await $.ajax({
+      url: `${page}`,
+      data: {
+        "page": page
+      },
+      type: "GET",
+      success: response => {
+        records = response.records
+        if (!totalPages) {
+          totalPages = totalPages || []
+          for (let i = currentPage; i <= response.total_pages; i++) {
+            totalPages.push(i);
+          }
+          firstPage = 1;
+          lastPage = totalPages.length < 5 ? totalPages.length : 5 ;
+        } else {
+          
+        }
+        addPageButtons(response)
+      }
+    });
+  }
+}
+
+
+async function addPageButtons(response) {
+  prevPage = (currentPage - 1) <= 0 ? 1 : currentPage - 1
+  nextPage = (currentPage + 1) > totalPages.length ? totalPages.length - 1 : currentPage + 1;
+  
+  pagesToShow = totalPages.slice(firstPage, lastPage)
+  $('#pages').empty();
+  $('#records').empty();
+  $('#pages').append(`<button data-page='${prevPage}' onClick='fetchVisits(this.dataset.page)'>Previous</button>`)
+  for (const i of totalPages) {
+    $('#pages').append(`<button data-page='${i}' onClick='fetchVisits(this.dataset.page)'>${i}</button>`)
+  }
+  $('#pages').append(`<button data-page='${nextPage}' onClick='fetchVisits(this.dataset.page)'>Next</button>`)
+  showRecords()
+}
+
+function showRecords() {
+  for(record of records) {
+    $('#records').append(`<li>${record.created_at}</li>`)
+  }
+}
+</script>
