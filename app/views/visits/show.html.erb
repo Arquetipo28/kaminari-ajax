@@ -55,7 +55,6 @@ async function addPageButtons(response) {
     } else if (currentPage <= firstPage) {
       firstPage = currentPage - 5;
       lastPage = firstPage + 5;
-      console.log(firstPage, lastPage)
     }
     pagesToShow = totalPages.slice(firstPage, lastPage)
     $('#pages').empty();
