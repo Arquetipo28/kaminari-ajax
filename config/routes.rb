@@ -1,3 +1,4 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  get 'visits/show', to: 'visits#show'
+  get 'visits/:page', to: 'visits#visitors'
 end
